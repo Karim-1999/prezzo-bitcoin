@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cacolo prezzo bitcoin</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: xx-large;
+        }
+
+        p {
+            text-align: center;
+            font-size: 2rem;
+        }
+
+        #btc-price {
+            color: #f00;
+            font-size: 3rem;
+            display: block;
+            margin-top: 30px;
+        }
+
+        
+
+        .container {
+            margin: 300px;
+            
+            text-align: center;
+        }
+
+        .price {
+            font-size: 3em;
+            font-weight: bold;
+            margin-top: 20px;
+            animation: fadein 1s;
+            color: #f00;
+        }
+
+        @keyframes fadein {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .loading {
+            font-size: 2em;
+            margin-top: 20px;
+            animation: rotate 1s linear infinite;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="container">
+        <h1>Prezzo bitcoin</h1>
+        <h1>Calcolatore del prezzo del Bitcoin</h1>
+        <p>Il prezzo attuale del Bitcoin in dollari è: <span class="price" id="btc-priced"></span></p>
+        <p>Prezzo aggiornato ogni 10 secondi</p>
+    </div>
+
+
+    <script type="text/javascript" charset="utf-8">// Effettua la chiamata all'API per ottenere il prezzo del Bitcoin in dollari
+        function getPrice() {
+            const url = "https://api.coindesk.com/v1/bpi/currentprice/USD.json";
+
+            // Mostra la scritta di caricamento
+            document.querySelector(".price").textContent = "";
+            document.querySelector(".price").classList.remove("fadein");
+            document.querySelector(".container").insertAdjacentHTML("beforeend", '<div class="loading">Caricamento...</div>');
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    // Rimuovi la scritta di caricamento e mostra il prezzo del Bitcoin
+                    document.querySelector(".loading").remove();
+                    document.querySelector(".price").textContent = data.bpi.USD.rate_float.toLocaleString("en-US", { style: "currency", currency: "USD" });
+                    document.querySelector(".price").classList.add("fadein");
+                })
+                .catch(error => console.error(error));
+        }
+
+        // Aggiorna il prezzo del Bitcoin ogni 10 secondi
+        setInterval(getPrice, 10000);
+
+        // Chiama getPrice() per la prima volta all'avvio dell'applicazione
+        getPrice();
+
+    </script>
+</body>
+
+</html>
